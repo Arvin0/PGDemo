@@ -6,14 +6,16 @@ namespace PGDemo.Repository
 {
     public interface IProductDao : IDependency
     {
-        IEnumerable<ProductModel> Get();
+        IEnumerable<Product> Get();
 
-        ProductModel Get(int id);
+        Product Get(int id);
 
-        bool Insert(ProductModel model);
+        bool Add(Product model);
 
-        bool Update(ProductModel model);
+        bool Modify(Product model);
 
-        bool Delete(int id);
+        bool Remove(int id);
+
+        object Test();
     }
 }

@@ -1,49 +1,71 @@
-﻿using PGDemo.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using PGDemo.Model;
+using PGDemo.Repository.Common;
 using PGDemo.Repository.EFCore.dbcontext;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace PGDemo.Repository.Impl
 {
-    public class ProductDao : IProductDao
+    public class ProductDao : DBBaseEF<Product>, IProductDao
     {
         private readonly ProductDbContext _productContext;
 
-        public ProductDao(ProductDbContext productContext)
+        public ProductDao()
         {
-            _productContext = productContext;
+            _productContext = (ProductDbContext)Db;
         }
 
-        public IEnumerable<ProductModel> Get()
+        public IEnumerable<Product> Get()
         {
-            return _productContext.ProductModels.ToList();
+            return Query();
         }
 
-        public ProductModel Get(int id)
+        public Product Get(int id)
         {
-            return _productContext.ProductModels.FirstOrDefault(product => product.Id == id);
+            return QueryFirstOrDefault(p => p.Id == id);
         }
 
-        public bool Insert(ProductModel model)
+        public bool Add(Product model)
         {
-            _productContext.ProductModels.Add(model);
-            var result = _productContext.SaveChanges();
-            return result > 0;
+            return Insert(model) > 0;
         }
 
-        public bool Update(ProductModel model)
+        public bool Modify(Product model)
         {
-            _productContext.ProductModels.Update(model);
-            var result = _productContext.SaveChanges();
-            return result > 0;
+            var oldValue = Get(model.Id);
+            _productContext.Entry(oldValue).CurrentValues.SetValues(model);
+            return _productContext.SaveChanges() >= 0;
         }
 
-        public bool Delete(int id)
+        public bool Remove(int id)
         {
-            var model = Get(id);
-            _productContext.ProductModels.Remove(model);
-            var result = _productContext.SaveChanges();
-            return result > 0;
+            return Delete(id) > 0;
+        }
+
+        public object Test()
+        {
+            ////Query
+
+            //var query = _productContext.ProductModels.FromSql("select * from product;");
+
+            //var query = _productContext.ProductModels.FromSql("select * from product where id = @id;", 
+            //    new []
+            //    {
+            //        new NpgsqlParameter("@id", 2)
+            //    });
+
+            //var query = _productContext.ProductModels.FromSql(
+            //    @"select * from product where (category->>'First') = '水果';");
+
+            //return query.ToList();
+
+            ////Update
+
+            var update = _productContext.Database.ExecuteSqlCommand(
+                $"update product set description = '{DateTime.Now}' where (category->>'First') = '水果';");
+
+            return update;
         }
     }
 }

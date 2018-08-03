@@ -15,29 +15,34 @@ namespace PGDemo.Service.Impl
             _productDao = productDao;
         }
 
-        IEnumerable<ProductModel> IProductService.GetProducts()
+        IEnumerable<Product> IProductService.GetProducts()
         {
             return _productDao.Get();
         }
 
-        public ProductModel GetProduct(int id)
+        public Product GetProduct(int id)
         {
             return _productDao.Get(id);
         }
 
-        public bool InsertProduct(ProductModel model)
+        public bool InsertProduct(Product model)
         {
-            return _productDao.Insert(model);
+            return _productDao.Add(model);
         }
 
-        public bool UpdateProduct(ProductModel model)
+        public bool UpdateProduct(Product model)
         {
-            return _productDao.Update(model);
+            return _productDao.Modify(model);
         }
 
         public bool DeleteProduct(int id)
         {
-            return _productDao.Delete(id);
+            return _productDao.Remove(id);
+        }
+
+        public object Test()
+        {
+            return _productDao.Test();
         }
     }
 }

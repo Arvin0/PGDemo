@@ -5,10 +5,14 @@ namespace PGDemo.Repository.EFCore.dbcontext
 {
     public class ProductDbContext : DbContext
     {
+        public ProductDbContext()
+        {
+        }
+
         public ProductDbContext(DbContextOptions<ProductDbContext> options) : base(options)
         {
         }
 
-        public DbSet<ProductModel> ProductModels { get; set; }
+        public DbSet<Product> ProductModels { get; set; }
     }
 }

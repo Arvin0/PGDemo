@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Internal;
 using PGDemo.Model;
+using PGDemo.Repository.Common;
 using PGDemo.Repository.EFCore.dbcontext;
 using System;
 using System.Collections.Generic;
@@ -7,15 +8,13 @@ using System.Linq;
 
 namespace PGDemo.Repository.Impl
 {
-    public class OrderDao : IOrderDao
+    public class OrderDao : DBBaseEF<Order>, IOrderDao
     {
-        private readonly ProductDbContext _productContext;
         private readonly OrderDbContext _orderContext;
 
-        public OrderDao(ProductDbContext productContext, OrderDbContext orderContext)
+        public OrderDao()
         {
-            _productContext = productContext;
-            _orderContext = orderContext;
+            _orderContext = (OrderDbContext)Db;
         }
 
         public IEnumerable<OrderViewModel> Get()
@@ -27,12 +26,14 @@ namespace PGDemo.Repository.Impl
             {
                 foreach (var order in orders)
                 {
-                    var orderModel = new OrderViewModel();
-                    orderModel.Id = order.Id;
-                    orderModel.Title = order.Title;
-                    orderModel.CreateTime = order.CreateTime;
-                    orderModel.TotalPrice = order.TotalPrice;
-                    orderModel.TotalAmount = order.TotalAmount;
+                    var orderModel = new OrderViewModel
+                    {
+                        Id = order.Id,
+                        Title = order.Title,
+                        CreateTime = order.CreateTime,
+                        TotalPrice = order.TotalPrice,
+                        TotalAmount = order.TotalAmount
+                    };
 
                     //联合查询
                     var orderItemModelQuery = _orderContext.OrderItems
@@ -94,18 +95,18 @@ namespace PGDemo.Repository.Impl
 
         public bool Insert(OrderViewModel model)
         {
-            var dbOrder = new OrderModel
+            var dbOrder = new Order
             {
                 Id = model.Id,
                 Title = model.Title,
                 CreateTime = DateTime.Now,
             };
 
-            IList<OrderItemModel> itemsModels = new List<OrderItemModel>();
+            IList<OrderItem> itemsModels = new List<OrderItem>();
             foreach (var item in model.OrderItems)
             {
-                var product = _productContext.ProductModels.FirstOrDefault(p => p.Id == item.ProductId);
-                itemsModels.Add(new OrderItemModel()
+                var product = _orderContext.Product.FirstOrDefault(p => p.Id == item.ProductId);
+                itemsModels.Add(new OrderItem()
                 {
                     Id = item.Id,
                     OrderId = model.Id,
@@ -159,7 +160,7 @@ namespace PGDemo.Repository.Impl
                 dbOrder.TotalPrice = model.OrderItems.Sum(item => item.Price);
             }
 
-            IList<OrderItemModel> itemModels = _orderContext.OrderItems
+            IList<OrderItem> itemModels = _orderContext.OrderItems
                 .Where(item => model.OrderItems.FirstOrDefault(i => i.Id == item.Id) != null)
                 .ToList();
             foreach (var itemModel in itemModels)
@@ -179,7 +180,7 @@ namespace PGDemo.Repository.Impl
         {
             var dbOrder = _orderContext.Order.FirstOrDefault(o => o.Id == id);
 
-            IList<OrderItemModel> itemModels = _orderContext.OrderItems
+            IList<OrderItem> itemModels = _orderContext.OrderItems
                 .Where(item => item.OrderId == id)
                 .ToList();
 

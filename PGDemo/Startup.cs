@@ -38,20 +38,8 @@ namespace PGDemo
                 });
             });
 
+            services.SetConfiguration(Configuration);
             services.RegisterServices("PGDemo.*.dll");
-
-            //EF Core配置
-            //var logFactory = new LoggerFactory();
-            //logFactory.AddProvider(new EFLoggerProvider());
-            var connectionString = Configuration.GetConnectionString("PGDemo");
-            services.AddEntityFrameworkNpgsql().AddDbContext<ProductDbContext>(options =>
-            {
-                options.UseNpgsql(connectionString).UseLoggerFactory(new LoggerFactory().AddConsole());
-            });
-            services.AddEntityFrameworkNpgsql().AddDbContext<OrderDbContext>(options =>
-            {
-                options.UseNpgsql(connectionString).UseLoggerFactory(new LoggerFactory().AddConsole());
-            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -75,10 +63,10 @@ namespace PGDemo
                 c.DocExpansion(DocExpansion.None);
             });
 
+            app.UseExceptionHandle();
+
             app.UseHttpsRedirection();
             app.UseMvc();
-
-            
         }
     }
 }

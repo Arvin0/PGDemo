@@ -6,14 +6,16 @@ namespace PGDemo.Service
 {
     public interface IProductService : IDependency
     {
-        IEnumerable<ProductModel> GetProducts();
+        IEnumerable<Product> GetProducts();
 
-        ProductModel GetProduct(int id);
+        Product GetProduct(int id);
 
-        bool InsertProduct(ProductModel model);
+        bool InsertProduct(Product model);
 
-        bool UpdateProduct(ProductModel model);
+        bool UpdateProduct(Product model);
 
         bool DeleteProduct(int id);
+
+        object Test();
     }
 }

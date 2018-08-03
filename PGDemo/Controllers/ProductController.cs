@@ -1,39 +1,61 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using PGDemo.Model;
 using PGDemo.Service;
+using System;
+using System.Collections.Generic;
 
 namespace PGDemo.Controllers
 {
-    [Route("api/[controller]")]
+    /// <summary>
+    /// 
+    /// </summary>
+    [Route("api/Product")]
     [ApiController]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="productService"></param>
         public ProductController(IProductService productService)
         {
             _productService = productService;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<ProductModel>> Get()
+        public ActionResult<IEnumerable<Product>> Get()
         {
-            return new ActionResult<IEnumerable<ProductModel>>(_productService.GetProducts());
+            var testResult = _productService.Test();
+            return new ActionResult<IEnumerable<Product>>(_productService.GetProducts());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<ProductModel> Get(int id)
+        public ActionResult<Product> Get(int id)
         {
-            return new ActionResult<ProductModel>(_productService.GetProduct(id));
+            return new ActionResult<Product>(_productService.GetProduct(id));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] ProductModel model)
+        public void Post([FromBody] Product model)
         {
             var result = _productService.InsertProduct(model);
             if (!result)
@@ -42,9 +64,14 @@ namespace PGDemo.Controllers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] ProductModel model)
+        public void Put(int id, [FromBody] Product model)
         {
             var result = _productService.UpdateProduct(model);
             if (!result)
@@ -53,6 +80,10 @@ namespace PGDemo.Controllers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)

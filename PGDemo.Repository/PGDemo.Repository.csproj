@@ -5,14 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PGDemo.Common\PGDemo.Common.csproj" />
     <ProjectReference Include="..\PGDemo.DependencyInjection\PGDemo.DependencyInjection.csproj" />
     <ProjectReference Include="..\PGDemo.Model\PGDemo.Model.csproj" />
   </ItemGroup>
