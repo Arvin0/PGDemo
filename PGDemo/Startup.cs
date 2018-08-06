@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using PGDemo.ApiCore.Extensions;
-using PGDemo.Common.EFLog;
-using PGDemo.Repository.EFCore.dbcontext;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace PGDemo
