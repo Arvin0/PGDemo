@@ -5,13 +5,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PGDemo.Common\PGDemo.Common.csproj" />
+    <ProjectReference Include="..\PGDemo.DBModel\PGDemo.DBModel.csproj" />
     <ProjectReference Include="..\PGDemo.DependencyInjection\PGDemo.DependencyInjection.csproj" />
-    <ProjectReference Include="..\PGDemo.Model\PGDemo.Model.csproj" />
+    <ProjectReference Include="..\PGDemo.Log\PGDemo.Log.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PGDemo.Model
+namespace PGDemo.DBModel
 {
     [Table("order")]
     public class Order
@@ -20,5 +21,10 @@ namespace PGDemo.Model
 
         [Column(name: "create_date")]
         public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 订单明细
+        /// </summary>
+        public ICollection<OrderItem> OrderItems { get; set; }
     }
 }

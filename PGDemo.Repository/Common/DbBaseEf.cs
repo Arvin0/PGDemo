@@ -1,109 +1,115 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using PGDemo.Repository.EFCore.DBContexts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
-using PGDemo.Repository.EFCore;
+using PGDemo.DependencyInjection;
 
 namespace PGDemo.Repository.Common
 {
-    public class DBBaseEF<T>  where T : class, new()
+    public class DbBaseEF<TEntity> where TEntity : class, new()
     {
-        protected DbContext Db = DbContextFactory.Instance.GetDbContext<T>();
+        protected readonly PGDemoDbContext DbContext;
+
+        public DbBaseEF()
+        {
+            DbContext = ServiceManagement.GetService<PGDemoDbContext>(typeof(PGDemoDbContext));
+        }
 
         #region Query
 
-        public IEnumerable<T> Query()
+        public IEnumerable<TEntity> Query()
         {
-            return Db.Set<T>().ToList();
+            return DbContext.Set<TEntity>().ToList();
         }
 
-        public T Query(dynamic id)
+        public IEnumerable<TEntity> Query(Expression<Func<TEntity, bool>> whereExpression)
         {
-            return Db.Set<T>().Find(id);
+            return DbContext.Set<TEntity>().Where(whereExpression);
         }
 
-        public T QueryFirstOrDefault(Expression<Func<T, bool>> whereExpression = null)
+        public TEntity Query(dynamic id)
         {
-            if (whereExpression != null)
-            {
-                return Db.Set<T>().FirstOrDefault(whereExpression);
-            }
+            return DbContext.Set<TEntity>().Find(id);
+        }
 
-            return Db.Set<T>().FirstOrDefault();
+        public TEntity QueryFirstOrDefault(Expression<Func<TEntity, bool>> whereExpression)
+        {
+            return DbContext.Set<TEntity>().FirstOrDefault(whereExpression);
         }
 
         #endregion
 
         #region Insert
 
-        public int Insert(T model)
+        public int Insert(TEntity model)
         {
             InsertWithoutSave(model);
             return Save();
         }
 
-        public int Insert(IEnumerable<T> model)
+        public int Insert(IEnumerable<TEntity> model)
         {
             InsertWithoutSave(model);
             return Save();
         }
 
-        public void InsertWithoutSave(T model)
+        public void InsertWithoutSave(TEntity model)
         {
-            Db.Set<T>().Add(model);
+            DbContext.Set<TEntity>().Add(model);
         }
 
-        public void InsertWithoutSave(IEnumerable<T> model)
+        public void InsertWithoutSave(IEnumerable<TEntity> model)
         {
-            Db.Set<T>().AddRange(model);
+            DbContext.Set<TEntity>().AddRange(model);
         }
 
         #endregion
 
         #region Update
 
-        public int Update(T model)
+        public int Update(TEntity model)
         {
             UpdateWithoutSave(model);
             return Save();
         }
 
-        public int Update(IEnumerable<T> model)
+        public int Update(IEnumerable<TEntity> model)
         {
             UpdateWithoutSave(model);
             return Save();
         }
 
-        public void UpdateWithoutSave(T model)
+        public void UpdateWithoutSave(TEntity model)
         {
-            var entry = Db.Entry(model);
-            Db.Set<T>().Attach(model);
+            var entry = DbContext.Entry(model);
+            DbContext.Set<TEntity>().Attach(model);
             entry.State = EntityState.Modified;
         }
 
-        public void UpdateWithoutSave(IEnumerable<T> model)
+        public void UpdateWithoutSave(IEnumerable<TEntity> model)
         {
-            Db.Set<T>().UpdateRange(model);
+            DbContext.Set<TEntity>().UpdateRange(model);
         }
 
         #endregion
 
         #region Delete
 
-        public int Delete(T model)
+        public int Delete(TEntity model)
         {
             DeleteWithoutSave(model);
             return Save();
         }
 
-        public int Delete(IEnumerable<T> model)
+        public int Delete(IEnumerable<TEntity> model)
         {
             DeleteWithoutSave(model);
             return Save();
         }
 
-        public int Delete(Expression<Func<T, bool>> whereExpression)
+        public int Delete(Expression<Func<TEntity, bool>> whereExpression)
         {
             var model = QueryFirstOrDefault(whereExpression);
             return Delete(model);
@@ -115,14 +121,14 @@ namespace PGDemo.Repository.Common
             return Delete(model);
 
         }
-        public void DeleteWithoutSave(T model)
+        public void DeleteWithoutSave(TEntity model)
         {
-            Db.Set<T>().Remove(model);
+            DbContext.Set<TEntity>().Remove(model);
         }
 
-        public void DeleteWithoutSave(IEnumerable<T> model)
+        public void DeleteWithoutSave(IEnumerable<TEntity> model)
         {
-            Db.Set<T>().RemoveRange(model);
+            DbContext.Set<TEntity>().RemoveRange(model);
         }
 
         #endregion
@@ -131,7 +137,7 @@ namespace PGDemo.Repository.Common
 
         public int Save()
         {
-            return Db.SaveChanges();
+            return DbContext.SaveChanges();
         }
 
         #endregion

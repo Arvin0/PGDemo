@@ -24,7 +24,7 @@ namespace PGDemo.ApiCore.Extensions
                             var serviceType = type.GetInterfaces().FirstOrDefault(instanceType => baseType.IsAssignableFrom(instanceType));
                             if (serviceType != null)
                             {
-                                services.AddScoped(serviceType, type);
+                                services.AddScoped(serviceType == baseType ? type : serviceType, type);
                             }
                         }
                     }

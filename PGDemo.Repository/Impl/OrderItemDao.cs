@@ -2,7 +2,7 @@
 
 namespace PGDemo.Repository.Impl
 {
-    public class OrderDao : BaseRepository<Order>, IOrderDao
+    public class OrderItemDao : BaseRepository<OrderItem>, IOrderItemDao
     {
     }
 }

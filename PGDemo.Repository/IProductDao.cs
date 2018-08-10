@@ -1,21 +1,9 @@
-﻿using PGDemo.DependencyInjection;
-using PGDemo.Model;
-using System.Collections.Generic;
+﻿using PGDemo.DBModel;
 
 namespace PGDemo.Repository
 {
-    public interface IProductDao : IDependency
+    public interface IProductDao : IBaseRepository<Product>
     {
-        IEnumerable<Product> Get();
-
-        Product Get(int id);
-
-        bool Add(Product model);
-
-        bool Modify(Product model);
-
-        bool Remove(int id);
-
         object Test();
     }
 }

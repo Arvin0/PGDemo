@@ -1,10 +1,12 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using PGDemo.ApiCore.Extensions;
+using PGDemo.ApiCore.Extensions.RoutePrefix;
+using PGDemo.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace PGDemo
@@ -27,6 +29,7 @@ namespace PGDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // 设置Swagger
             services.AddSwaggerGen(options => {
                 options.SwaggerDoc("v1", new Info()
                 {
@@ -35,14 +38,36 @@ namespace PGDemo
                 });
             });
 
+            // 设置配置信息
             services.SetConfiguration(Configuration);
+
+            // 注册项目中的服务
             services.RegisterServices("PGDemo.*.dll");
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            // 设置服务管理以便于获取服务实例
+            services.SetServiceProvider();
+
+            // 跨域设置
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllCors", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
+            });
+
+            services.AddMvc(
+                options =>
+                {
+                    options.UseCentralRoutePrefix(new RouteAttribute("api"));
+                }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
         
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -52,7 +77,13 @@ namespace PGDemo
             {
                 app.UseHsts();
             }
-            
+
+            app.UseExceptionHandle();
+
+            app.UseHttpsRedirection();
+            app.UseMvc();
+
+            // swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -60,10 +91,8 @@ namespace PGDemo
                 c.DocExpansion(DocExpansion.None);
             });
 
-            app.UseExceptionHandle();
-
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            // 跨域
+            app.UseCors("AllowAllCors");
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using PGDemo.Common.Exceptions;
 using PGDemo.Model;
 using PGDemo.Repository;
+using System.Collections.Generic;
+using System.Linq;
+using PGDemo.DBModel;
 
 namespace PGDemo.Service.Impl
 {
@@ -15,29 +16,90 @@ namespace PGDemo.Service.Impl
             _productDao = productDao;
         }
 
-        IEnumerable<Product> IProductService.GetProducts()
+        IList<ProductViewModel> IProductService.GetProducts()
         {
-            return _productDao.Get();
+            IList<ProductViewModel> productModels = null;
+
+            var products = _productDao.Get();
+            if (products != null)
+            {
+                var productQuery = from p in products
+                    select new ProductViewModel()
+                    {
+                        Id = p.Id,
+                        Category = p.Category,
+                        CategoryB = p.CategoryB,
+                        Description = p.Description,
+                        Name = p.Name,
+                        Price = p.Price
+                    };
+
+                productModels = productQuery.ToList();
+            }
+
+            return productModels;
         }
 
-        public Product GetProduct(int id)
+        public ProductViewModel GetProduct(int id)
         {
-            return _productDao.Get(id);
+            ProductViewModel productModel = null;
+            var product = _productDao.Get(id);
+            if (product != null)
+            {
+                productModel = new ProductViewModel
+                {
+                    Id = product.Id,
+                    Category = product.Category,
+                    CategoryB = product.CategoryB,
+                    Description = product.Description,
+                    Name = product.Name,
+                    Price = product.Price
+                };
+            }
+
+            return productModel;
         }
 
-        public bool InsertProduct(Product model)
+        public bool InsertProduct(ProductViewModel model)
         {
-            return _productDao.Add(model);
+            Product product = new Product()
+            {
+                Id = model.Id,
+                Category = model.Category,
+                CategoryB = model.CategoryB,
+                Description = model.Description,
+                Name = model.Name,
+                Price = model.Price
+            };
+            return _productDao.Add(product);
         }
 
-        public bool UpdateProduct(Product model)
+        public bool UpdateProduct(ProductViewModel model)
         {
-            return _productDao.Modify(model);
+            var product = _productDao.Get(model.Id);
+            if (product == null)
+            {
+                throw new BusinessLogicException("该产品不存在");
+            }
+
+            product.Category = model.Category;
+            product.CategoryB = model.CategoryB;
+            product.Description = model.Description;
+            product.Name = model.Name;
+            product.Price = model.Price;
+
+            return _productDao.Modify(product);
         }
 
         public bool DeleteProduct(int id)
         {
-            return _productDao.Remove(id);
+            var product = _productDao.Get(id);
+            if (product == null)
+            {
+                throw new BusinessLogicException("该产品不存在");
+            }
+
+            return _productDao.Remove(product);
         }
 
         public object Test()

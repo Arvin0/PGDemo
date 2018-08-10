@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using PGDemo.Common.Exceptions;
 using PGDemo.Model;
 using PGDemo.Service;
-using System;
 using System.Collections.Generic;
 
 namespace PGDemo.Controllers
@@ -10,7 +10,7 @@ namespace PGDemo.Controllers
     /// <summary>
     /// 
     /// </summary>
-    [Route("api/Product")]
+    [Route("[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -31,10 +31,10 @@ namespace PGDemo.Controllers
         /// <returns></returns>
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<Product>> Get()
+        public ActionResult<IEnumerable<ProductViewModel>> Get()
         {
             var testResult = _productService.Test();
-            return new ActionResult<IEnumerable<Product>>(_productService.GetProducts());
+            return new ActionResult<IEnumerable<ProductViewModel>>(_productService.GetProducts());
         }
 
         /// <summary>
@@ -44,9 +44,9 @@ namespace PGDemo.Controllers
         /// <returns></returns>
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<Product> Get(int id)
+        public ActionResult<ProductViewModel> Get(int id)
         {
-            return new ActionResult<Product>(_productService.GetProduct(id));
+            return new ActionResult<ProductViewModel>(_productService.GetProduct(id));
         }
 
         /// <summary>
@@ -55,12 +55,12 @@ namespace PGDemo.Controllers
         /// <param name="model"></param>
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] Product model)
+        public void Post([FromBody] ProductViewModel model)
         {
             var result = _productService.InsertProduct(model);
             if (!result)
             {
-                throw new Exception("新增失败");
+                throw new BusinessLogicException("新增失败");
             }
         }
 
@@ -71,12 +71,12 @@ namespace PGDemo.Controllers
         /// <param name="model"></param>
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Product model)
+        public void Put(int id, [FromBody] ProductViewModel model)
         {
             var result = _productService.UpdateProduct(model);
             if (!result)
             {
-                throw new Exception("更新失败");
+                throw new BusinessLogicException("更新失败");
             }
         }
 
@@ -91,7 +91,7 @@ namespace PGDemo.Controllers
             var result = _productService.DeleteProduct(id);
             if (!result)
             {
-                throw new Exception("删除失败");
+                throw new BusinessLogicException("删除失败");
             }
         }
     }

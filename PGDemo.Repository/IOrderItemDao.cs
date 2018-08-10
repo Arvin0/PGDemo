@@ -2,7 +2,7 @@
 
 namespace PGDemo.Repository
 {
-    public interface IOrderDao : IBaseRepository<Order>
+    public interface IOrderItemDao : IBaseRepository<OrderItem>
     {
     }
 }

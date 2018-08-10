@@ -9,7 +9,7 @@ namespace PGDemo.Controllers
     /// <summary>
     /// 
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
     {

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PGDemo.DBModel\PGDemo.DBModel.csproj" />
     <ProjectReference Include="..\PGDemo.DependencyInjection\PGDemo.DependencyInjection.csproj" />
     <ProjectReference Include="..\PGDemo.Model\PGDemo.Model.csproj" />
     <ProjectReference Include="..\PGDemo.Repository\PGDemo.Repository.csproj" />

@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
 
-namespace PGDemo.Model
+namespace PGDemo.DBModel
 {
     /// <summary>
     /// 产品模型
