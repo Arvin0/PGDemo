@@ -20,7 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\PGDemo.ApiCore\PGDemo.ApiCore.csproj" />
     <ProjectReference Include="..\PGDemo.Common\PGDemo.Common.csproj" />
-    <ProjectReference Include="..\PGDemo.Repository\PGDemo.Repository.csproj" />
     <ProjectReference Include="..\PGDemo.Service\PGDemo.Service.csproj" />
   </ItemGroup>
 
