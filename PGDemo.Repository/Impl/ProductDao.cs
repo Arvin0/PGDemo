@@ -1,11 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PGDemo.DBModel;
 using System;
+using PGDemo.Repository.EFCore.DBContexts;
 
 namespace PGDemo.Repository.Impl
 {
     public class ProductDao : BaseRepository<Product>, IProductDao
     {
+        #region Constructor
+
+        public ProductDao(PGDemoDbContext dbContext) : base(dbContext)
+        {
+        }
+
+        #endregion
+
         public object Test()
         {
             ////Query

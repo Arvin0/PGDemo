@@ -64,7 +64,6 @@ namespace PGDemo.Service.Impl
         {
             Product product = new Product()
             {
-                Id = model.Id,
                 Category = model.Category,
                 CategoryB = model.CategoryB,
                 Description = model.Description,

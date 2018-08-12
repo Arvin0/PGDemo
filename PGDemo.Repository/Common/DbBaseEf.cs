@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PGDemo.Repository.EFCore.DBContexts;
+﻿using PGDemo.Repository.EFCore.DBContexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using PGDemo.DependencyInjection;
 
 namespace PGDemo.Repository.Common
 {
@@ -12,10 +10,14 @@ namespace PGDemo.Repository.Common
     {
         protected readonly PGDemoDbContext DbContext;
 
-        public DbBaseEF()
+        #region Constructor
+
+        public DbBaseEF(PGDemoDbContext dbContext)
         {
-            DbContext = ServiceManagement.GetService<PGDemoDbContext>(typeof(PGDemoDbContext));
+            DbContext = dbContext;
         }
+
+        #endregion
 
         #region Query
 
@@ -83,9 +85,7 @@ namespace PGDemo.Repository.Common
 
         public void UpdateWithoutSave(TEntity model)
         {
-            var entry = DbContext.Entry(model);
-            DbContext.Set<TEntity>().Attach(model);
-            entry.State = EntityState.Modified;
+            DbContext.Set<TEntity>().Update(model);
         }
 
         public void UpdateWithoutSave(IEnumerable<TEntity> model)

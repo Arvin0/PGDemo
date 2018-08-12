@@ -23,7 +23,7 @@ namespace PGDemo.Service.Impl
         {
             var orderModels = new List<OrderViewModel>();
 
-            var orders = _orderDao.Get();
+            var orders = _orderDao.Get(true);
             if (orders.Any())
             {
                 foreach (var order in orders)
@@ -61,7 +61,7 @@ namespace PGDemo.Service.Impl
         {
             OrderViewModel orderModel = null;
 
-            var order = _orderDao.Get(id);
+            var order = _orderDao.Get(id, true);
             if (order != null)
             {
                 orderModel = new OrderViewModel
@@ -92,21 +92,18 @@ namespace PGDemo.Service.Impl
 
         public bool InsertOrder(OrderViewModel model)
         {
-            var productIds = model.OrderItems.Select(item => item.Id).ToList();
+            var productIds = model.OrderItems.Select(item => item.ProductId).ToList();
             var products = _productDao.Get(p => productIds.Contains(p.Id));
             var itemsModels = (from item in model.OrderItems
                 let product = products.FirstOrDefault(p => p.Id == item.ProductId)
                 select new OrderItem()
                 {
-                    Id = item.Id,
-                    OrderId = model.Id,
                     ProductId = item.ProductId,
                     Price = product.Price
                 }).ToList();
 
             var order = new Order
             {
-                Id = model.Id,
                 Title = model.Title,
                 CreateTime = DateTime.Now,
                 TotalAmount = itemsModels.Count,
@@ -120,25 +117,26 @@ namespace PGDemo.Service.Impl
 
         public bool UpdateOrder(OrderViewModel model)
         {
-            var order = _orderDao.Get(model.Id);
+            var order = _orderDao.Get(model.Id, true);
             if (order == null)
             {
                 throw new BusinessLogicException("该订单不存在");
             }
 
             order.Title = model.Title;
-            order.TotalAmount = model.OrderItems.Count;
-            order.TotalPrice = model.OrderItems.Sum(item => item.Price);
 
             foreach (var itemModel in model.OrderItems)
             {
-                var item = model.OrderItems.FirstOrDefault(i => i.Id == itemModel.Id);
+                var item = order.OrderItems.FirstOrDefault(i => i.Id == itemModel.Id);
                 if (item == null)
                 {
                     throw new BusinessLogicException($"该订单明细 [{itemModel.Id}] 不存在");
                 }
-                itemModel.Price = item.Price;
+                item.Price = itemModel.Price;
             }
+
+            order.TotalAmount = model.OrderItems.Count;
+            order.TotalPrice = model.OrderItems.Sum(item => item.Price);
 
             return _orderDao.Modify(order);
         }

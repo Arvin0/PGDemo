@@ -3,11 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using PGDemo.Repository.EFCore.DBContexts;
 
 namespace PGDemo.Repository.Impl
 {
     public class BaseRepository<TEntity> : DbBaseEF<TEntity>, IBaseRepository<TEntity> where TEntity : class , new ()
     {
+        #region Constructor
+
+        public BaseRepository(PGDemoDbContext dbContext) : base(dbContext)
+        {
+        }
+
+        #endregion
+
         public IList<TEntity> Get()
         {
             return Query().ToList();

@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PGDemo.ApiCore.Extensions;
 using PGDemo.ApiCore.Extensions.RoutePrefix;
-using PGDemo.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace PGDemo
@@ -18,7 +17,7 @@ namespace PGDemo
             var builder = new ConfigurationBuilder()
                 .SetBasePath(evn.ContentRootPath)
                 .AddJsonFile("appsettings.json", false, true)
-                .AddJsonFile($"appsettings.{evn.EnvironmentName}.json", true)
+                .AddJsonFile($"appsettings.{evn.EnvironmentName}.json", false, true)
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
@@ -43,9 +42,6 @@ namespace PGDemo
 
             // 注册项目中的服务
             services.RegisterServices("PGDemo.*.dll");
-
-            // 设置服务管理以便于获取服务实例
-            services.SetServiceProvider();
 
             // 跨域设置
             services.AddCors(options =>

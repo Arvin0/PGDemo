@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using PGDemo.DependencyInjection;
 
 namespace PGDemo.Repository
 {
-    public interface IBaseRepository<TEntity> : IDependency where TEntity : class, new ()
+    public interface IBaseRepository<TEntity> where TEntity : class, new ()
     {
         IList<TEntity> Get();
 
