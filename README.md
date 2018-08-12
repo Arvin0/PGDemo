@@ -4,7 +4,7 @@
 # 技术栈
 * 系统：linux  
 * 框架：.net core web api
-* ORM框架：ef core
+* ORM框架：ef core(db first, dbcontext)
 * db: postgresql
 
 # 运行说明
