@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace PGDemo.Repository.Common
 {
@@ -26,9 +28,19 @@ namespace PGDemo.Repository.Common
             return DbContext.Set<TEntity>().ToList();
         }
 
+        public Task<List<TEntity>> QueryAsync()
+        {
+            return DbContext.Set<TEntity>().ToListAsync();
+        }
+
         public IEnumerable<TEntity> Query(Expression<Func<TEntity, bool>> whereExpression)
         {
             return DbContext.Set<TEntity>().Where(whereExpression);
+        }
+
+        public Task<List<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> whereExpression)
+        {
+            return DbContext.Set<TEntity>().Where(whereExpression).ToListAsync();
         }
 
         public TEntity Query(dynamic id)
@@ -36,9 +48,19 @@ namespace PGDemo.Repository.Common
             return DbContext.Set<TEntity>().Find(id);
         }
 
+        public Task<TEntity> QueryAsync(dynamic id)
+        {
+            return DbContext.Set<TEntity>().FindAsync(id);
+        }
+
         public TEntity QueryFirstOrDefault(Expression<Func<TEntity, bool>> whereExpression)
         {
             return DbContext.Set<TEntity>().FirstOrDefault(whereExpression);
+        }
+
+        public Task<TEntity> QueryFirstOrDefaultAsync(Expression<Func<TEntity, bool>> whereExpression)
+        {
+            return DbContext.Set<TEntity>().FirstOrDefaultAsync(whereExpression);
         }
 
         #endregion
@@ -51,10 +73,22 @@ namespace PGDemo.Repository.Common
             return Save();
         }
 
+        public Task<int> InsertAsync(TEntity model)
+        {
+            InsertWithoutSaveAsync(model);
+            return SaveAsync();
+        }
+
         public int Insert(IEnumerable<TEntity> model)
         {
             InsertWithoutSave(model);
             return Save();
+        }
+
+        public Task<int> InsertAsync(IEnumerable<TEntity> model)
+        {
+            InsertWithoutSaveAsync(model);
+            return SaveAsync();
         }
 
         public void InsertWithoutSave(TEntity model)
@@ -62,9 +96,19 @@ namespace PGDemo.Repository.Common
             DbContext.Set<TEntity>().Add(model);
         }
 
+        public void InsertWithoutSaveAsync(TEntity model)
+        {
+            DbContext.Set<TEntity>().AddAsync(model);
+        }
+
         public void InsertWithoutSave(IEnumerable<TEntity> model)
         {
             DbContext.Set<TEntity>().AddRange(model);
+        }
+
+        public void InsertWithoutSaveAsync(IEnumerable<TEntity> model)
+        {
+            DbContext.Set<TEntity>().AddRangeAsync(model);
         }
 
         #endregion
@@ -138,6 +182,11 @@ namespace PGDemo.Repository.Common
         public int Save()
         {
             return DbContext.SaveChanges();
+        }
+
+        public Task<int> SaveAsync()
+        {
+            return DbContext.SaveChangesAsync();
         }
 
         #endregion

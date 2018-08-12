@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using PGDemo.Repository.EFCore.DBContexts;
 
 namespace PGDemo.Repository.Impl
@@ -22,9 +23,19 @@ namespace PGDemo.Repository.Impl
             return Query().ToList();
         }
 
+        public Task<List<TEntity>> GetAsync()
+        {
+            return QueryAsync();
+        }
+
         public TEntity Get(int id)
         {
             return Query(id);
+        }
+
+        public Task<TEntity> GetAsync(int id)
+        {
+            return QueryAsync(id);
         }
 
         public IList<TEntity> Get(Expression<Func<TEntity, bool>> whereExpression)
@@ -32,9 +43,29 @@ namespace PGDemo.Repository.Impl
             return Query(whereExpression).ToList();
         }
 
+        public Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> whereExpression)
+        {
+            return QueryAsync(whereExpression);
+        }
+
         public bool Add(TEntity model)
         {
             return Insert(model) > 0;
+        }
+
+        public bool AddAsync(TEntity model)
+        {
+            return InsertAsync(model).Result > 0;
+        }
+
+        public bool Add(IList<TEntity> model)
+        {
+            return Insert(model) > 0;
+        }
+
+        public bool AddAsync(IList<TEntity> model)
+        {
+            return InsertAsync(model).Result > 0;
         }
 
         public bool Modify(TEntity model)

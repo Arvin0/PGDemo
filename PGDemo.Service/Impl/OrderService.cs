@@ -4,6 +4,7 @@ using PGDemo.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using PGDemo.DBModel;
 
 namespace PGDemo.Service.Impl
@@ -19,11 +20,11 @@ namespace PGDemo.Service.Impl
             _productDao = productDao;
         }
 
-        public IEnumerable<OrderViewModel> GetOrders()
+        public async Task<IEnumerable<OrderViewModel>> GetOrders()
         {
             var orderModels = new List<OrderViewModel>();
 
-            var orders = _orderDao.Get(true);
+            var orders = await _orderDao.GetAsync(true);
             if (orders.Any())
             {
                 foreach (var order in orders)
@@ -57,11 +58,11 @@ namespace PGDemo.Service.Impl
             return orderModels;
         }
 
-        public OrderViewModel GetOrder(int id)
+        public async Task<OrderViewModel> GetOrder(int id)
         {
             OrderViewModel orderModel = null;
 
-            var order = _orderDao.Get(id, true);
+            var order = await _orderDao.GetAsync(id, true);
             if (order != null)
             {
                 orderModel = new OrderViewModel

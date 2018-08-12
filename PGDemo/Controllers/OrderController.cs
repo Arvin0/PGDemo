@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using PGDemo.Common.Exceptions;
 using PGDemo.Model;
 using PGDemo.Service;
 
@@ -30,9 +32,9 @@ namespace PGDemo.Controllers
         /// <returns></returns>
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<OrderViewModel>> Get()
+        public async Task<IEnumerable<OrderViewModel>> Get()
         {
-            return new ActionResult<IEnumerable<OrderViewModel>>(_orderService.GetOrders());
+            return await _orderService.GetOrders();
         }
 
         /// <summary>
@@ -42,9 +44,9 @@ namespace PGDemo.Controllers
         /// <returns></returns>
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<OrderViewModel> Get(int id)
+        public async Task<OrderViewModel> Get(int id)
         {
-            return new ActionResult<OrderViewModel>(_orderService.GetOrder(id));
+            return await _orderService.GetOrder(id);
         }
 
         /// <summary>
@@ -58,7 +60,7 @@ namespace PGDemo.Controllers
             var result = _orderService.InsertOrder(model);
             if (!result)
             {
-                throw new Exception("新增失败");
+                throw new BusinessLogicException("新增失败");
             }
         }
 
@@ -74,7 +76,7 @@ namespace PGDemo.Controllers
             var result = _orderService.UpdateOrder(model);
             if (!result)
             {
-                throw new Exception("更新失败");
+                throw new BusinessLogicException("更新失败");
             }
         }
 
@@ -89,7 +91,7 @@ namespace PGDemo.Controllers
             var result = _orderService.DeleteOrder(id);
             if (!result)
             {
-                throw new Exception("删除失败");
+                throw new BusinessLogicException("删除失败");
             }
         }
     }

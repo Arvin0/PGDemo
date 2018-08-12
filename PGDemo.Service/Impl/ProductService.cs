@@ -3,6 +3,7 @@ using PGDemo.Model;
 using PGDemo.Repository;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using PGDemo.DBModel;
 
 namespace PGDemo.Service.Impl
@@ -16,11 +17,11 @@ namespace PGDemo.Service.Impl
             _productDao = productDao;
         }
 
-        IList<ProductViewModel> IProductService.GetProducts()
+        public async Task<IEnumerable<ProductViewModel>> GetProducts()
         {
             IList<ProductViewModel> productModels = null;
 
-            var products = _productDao.Get();
+            var products = await _productDao.GetAsync();
             if (products != null)
             {
                 var productQuery = from p in products
@@ -40,10 +41,10 @@ namespace PGDemo.Service.Impl
             return productModels;
         }
 
-        public ProductViewModel GetProduct(int id)
+        public async Task<ProductViewModel> GetProduct(int id)
         {
             ProductViewModel productModel = null;
-            var product = _productDao.Get(id);
+            var product = await _productDao.GetAsync(id);
             if (product != null)
             {
                 productModel = new ProductViewModel
@@ -62,7 +63,7 @@ namespace PGDemo.Service.Impl
 
         public bool InsertProduct(ProductViewModel model)
         {
-            Product product = new Product()
+            var product = new Product()
             {
                 Category = model.Category,
                 CategoryB = model.CategoryB,

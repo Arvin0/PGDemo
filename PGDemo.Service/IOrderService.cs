@@ -1,14 +1,15 @@
 ﻿using PGDemo.DependencyInjection;
 using PGDemo.Model;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PGDemo.Service
 {
     public interface IOrderService : IDependency
     {
-        IEnumerable<OrderViewModel> GetOrders();
+        Task<IEnumerable<OrderViewModel>> GetOrders();
 
-        OrderViewModel GetOrder(int id);
+        Task<OrderViewModel> GetOrder(int id);
 
         bool InsertOrder(OrderViewModel model);
 

@@ -4,6 +4,7 @@ using PGDemo.Common.Exceptions;
 using PGDemo.Model;
 using PGDemo.Service;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PGDemo.Controllers
 {
@@ -31,10 +32,10 @@ namespace PGDemo.Controllers
         /// <returns></returns>
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<ProductViewModel>> Get()
+        public async Task<IEnumerable<ProductViewModel>> Get()
         {
-            var testResult = _productService.Test();
-            return new ActionResult<IEnumerable<ProductViewModel>>(_productService.GetProducts());
+            //var testResult = _productService.Test();
+            return await _productService.GetProducts();
         }
 
         /// <summary>
@@ -44,9 +45,9 @@ namespace PGDemo.Controllers
         /// <returns></returns>
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<ProductViewModel> Get(int id)
+        public async Task<ProductViewModel> Get(int id)
         {
-            return new ActionResult<ProductViewModel>(_productService.GetProduct(id));
+            return await _productService.GetProduct(id);
         }
 
         /// <summary>

@@ -1,14 +1,15 @@
 ﻿using PGDemo.DependencyInjection;
 using PGDemo.Model;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PGDemo.Service
 {
     public interface IProductService : IDependency
     {
-        IList<ProductViewModel> GetProducts();
+        Task<IEnumerable<ProductViewModel>> GetProducts();
 
-        ProductViewModel GetProduct(int id);
+        Task<ProductViewModel> GetProduct(int id);
 
         bool InsertProduct(ProductViewModel model);
 
