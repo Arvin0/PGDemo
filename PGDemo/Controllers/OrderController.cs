@@ -1,10 +1,12 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using PGDemo.Common.Exceptions;
+﻿using Microsoft.AspNetCore.Mvc;
+using PGDemo.ApiCore.Common;
+using PGDemo.ApiCore.Model;
 using PGDemo.Model;
 using PGDemo.Service;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace PGDemo.Controllers
 {
@@ -12,8 +14,7 @@ namespace PGDemo.Controllers
     /// 
     /// </summary>
     [Route("[controller]")]
-    [ApiController]
-    public class OrderController : ControllerBase
+    public class OrderController : ApiController
     {
         private readonly IOrderService _orderService;
 
@@ -32,9 +33,10 @@ namespace PGDemo.Controllers
         /// <returns></returns>
         // GET api/values
         [HttpGet]
-        public async Task<IEnumerable<OrderViewModel>> Get()
+        [SwaggerResponse((int)HttpStatusCode.OK, type: typeof(IEnumerable<OrderViewModel>))]
+        public async Task<ApiResponse> Get()
         {
-            return await _orderService.GetOrders();
+            return Success(await _orderService.GetOrders());
         }
 
         /// <summary>
@@ -44,9 +46,10 @@ namespace PGDemo.Controllers
         /// <returns></returns>
         // GET api/values/5
         [HttpGet("{id}")]
-        public async Task<OrderViewModel> Get(int id)
+        [SwaggerResponse((int)HttpStatusCode.OK, type: typeof(OrderViewModel))]
+        public async Task<ApiResponse> Get(int id)
         {
-            return await _orderService.GetOrder(id);
+            return Success(await _orderService.GetOrder(id));
         }
 
         /// <summary>
@@ -55,13 +58,16 @@ namespace PGDemo.Controllers
         /// <param name="model"></param>
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] OrderViewModel model)
+        public ApiResponse Post([FromBody] OrderViewModel model)
         {
             var result = _orderService.InsertOrder(model);
+
             if (!result)
             {
-                throw new BusinessLogicException("新增失败");
+                return Failture(0, "新增失败");
             }
+
+            return Success();
         }
 
         /// <summary>
@@ -71,13 +77,15 @@ namespace PGDemo.Controllers
         /// <param name="model"></param>
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] OrderViewModel model)
+        public ApiResponse Put(int id, [FromBody] OrderViewModel model)
         {
             var result = _orderService.UpdateOrder(model);
             if (!result)
             {
-                throw new BusinessLogicException("更新失败");
+                return Failture(0, "更新失败");
             }
+
+            return Success();
         }
 
         /// <summary>
@@ -86,13 +94,15 @@ namespace PGDemo.Controllers
         /// <param name="id"></param>
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ApiResponse Delete(int id)
         {
             var result = _orderService.DeleteOrder(id);
             if (!result)
             {
-                throw new BusinessLogicException("删除失败");
+                return Failture(0, "删除失败");
             }
+
+            return Success();
         }
     }
 }
