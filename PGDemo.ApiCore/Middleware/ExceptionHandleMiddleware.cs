@@ -2,16 +2,19 @@
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace PGDemo.ApiCore.Middleware
 {
     public class ExceptionHandleMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionHandleMiddleware> _logger;
 
-        public ExceptionHandleMiddleware(RequestDelegate next)
+        public ExceptionHandleMiddleware(RequestDelegate next, ILogger<ExceptionHandleMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -22,7 +25,6 @@ namespace PGDemo.ApiCore.Middleware
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 await HandleExceptionAsync(context, context.Response.StatusCode, e.ToString());
             }
             finally
@@ -55,11 +57,21 @@ namespace PGDemo.ApiCore.Middleware
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, int statusCode, string msg)
+        private Task HandleExceptionAsync(HttpContext context, int statusCode, string msg)
         {
             var data = new {code = statusCode.ToString(), is_success = false, msg = msg};
             var result = JsonConvert.SerializeObject(new {data = data});
             context.Response.ContentType = "application/json;charset=utf-8";
+
+            try
+            {
+                _logger.LogWarning(msg);
+            }
+            catch (Exception)
+            {
+                // Catch日志操作异常，以便于不影响主逻辑
+            }
+
             return context.Response.WriteAsync(result);
         }
     }
