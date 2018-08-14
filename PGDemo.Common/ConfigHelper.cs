@@ -55,7 +55,7 @@ namespace PGDemo.Common
 
             var migrationConfiguration = new ConfigurationBuilder()
                 .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
-                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile("efsettings.json", true, true)
                 .Build();
 
             if (migrationConfiguration != null)

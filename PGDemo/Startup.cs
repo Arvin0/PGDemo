@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PGDemo.ApiCore.Extensions;
 using PGDemo.ApiCore.Extensions.RoutePrefix;
+using PGDemo.Log.SeriLog;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace PGDemo
@@ -18,8 +19,9 @@ namespace PGDemo
                 .SetBasePath(evn.ContentRootPath)
                 .AddJsonFile("appsettings.json", false, true)
                 .AddJsonFile($"appsettings.{evn.EnvironmentName}.json", false, true)
+                .AddSerilog()
                 .AddEnvironmentVariables();
-
+            
             Configuration = builder.Build();
         }
 
@@ -78,6 +80,9 @@ namespace PGDemo
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            // log
+            app.RegisterSerilog(loggerFactory, Configuration);
 
             // swagger
             app.UseSwagger();
