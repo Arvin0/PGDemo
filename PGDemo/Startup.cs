@@ -78,9 +78,6 @@ namespace PGDemo
 
             app.UseExceptionHandle();
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
-
             // log
             app.RegisterSerilog(loggerFactory, Configuration);
 
@@ -94,6 +91,9 @@ namespace PGDemo
 
             // 跨域
             app.UseCors("AllowAllCors");
+
+            app.UseHttpsRedirection();
+            app.UseMvc();
         }
     }
 }
