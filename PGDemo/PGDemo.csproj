@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PGDemo.AOP.AspectCore\PGDemo.AOP.AspectCore.csproj" />
     <ProjectReference Include="..\PGDemo.ApiCore\PGDemo.ApiCore.csproj" />
     <ProjectReference Include="..\PGDemo.Common\PGDemo.Common.csproj" />
     <ProjectReference Include="..\PGDemo.Service\PGDemo.Service.csproj" />
