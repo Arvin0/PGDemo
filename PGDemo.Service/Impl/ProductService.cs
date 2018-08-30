@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PGDemo.DBModel;
+using PGDemo.DependencyInjection.Attributes;
 
 namespace PGDemo.Service.Impl
 {
@@ -17,6 +18,7 @@ namespace PGDemo.Service.Impl
             _productDao = productDao;
         }
 
+        [Log]
         public async Task<IEnumerable<ProductViewModel>> GetProducts()
         {
             IList<ProductViewModel> productModels = null;
