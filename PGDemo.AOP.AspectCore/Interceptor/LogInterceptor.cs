@@ -1,5 +1,6 @@
 ﻿using AspectCore.DynamicProxy;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -10,14 +11,20 @@ namespace PGDemo.AOP.AspectCore.Interceptor
 {
     public class LogInterceptor : AbstractInterceptor, IDependency
     {
-        public override Task Invoke(AspectContext context, AspectDelegate next)
+        public override async Task Invoke(AspectContext context, AspectDelegate next)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            
+            await next(context);
+
+            stopwatch.Stop();
+
             if (GetLogAttributeInfo(context.ImplementationMethod) != null)
             {
-                Console.WriteLine($"Begin {context.Implementation.ToString()}, {context.ImplementationMethod.Name}, {context.Proxy.ToString()}, {context.ProxyMethod.Name}");
+                Console.WriteLine(
+                    $"Begin {context.Implementation.ToString()}, {context.ImplementationMethod.Name}, {context.Proxy.ToString()}, {context.ProxyMethod.Name}, {stopwatch.ElapsedMilliseconds}");
             }
-            
-            return next(context);
         }
 
         private LogAttribute GetLogAttributeInfo(MethodInfo methodInfo)
