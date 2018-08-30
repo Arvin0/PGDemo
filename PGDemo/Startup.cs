@@ -76,7 +76,11 @@ namespace PGDemo
                 app.UseHsts();
             }
 
+            // 异常捕获
             app.UseExceptionHandle();
+
+            // API时间统计
+            app.StatisticExecutedTime();
 
             // log
             app.RegisterSerilog(loggerFactory, Configuration);
