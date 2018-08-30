@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using PGDemo.DBModel;
-using PGDemo.DependencyInjection;
+using PGDemo.DependencyInjection.IocFlag;
 
 namespace PGDemo.Repository
 {

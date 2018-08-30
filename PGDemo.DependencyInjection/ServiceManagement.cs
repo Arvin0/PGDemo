@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace PGDemo.DependencyInjection
+namespace PGDemo.DependencyInjection.IocFlag
 {
     public static class ServiceManagement
     {

@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PGDemo.Common;
-using PGDemo.DependencyInjection;
+using PGDemo.DependencyInjection.IocFlag;
 using PGDemo.Log.EFLog;
 using PGDemo.DBModel;
 
 namespace PGDemo.Repository.EFCore.DBContexts
 {
-    public class PGDemoDbContext : DbContext, IDependency
+    public class PGDemoDbContext : DbContext, IInstanceDependency
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

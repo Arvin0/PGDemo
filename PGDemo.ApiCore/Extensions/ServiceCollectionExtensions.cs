@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using PGDemo.DependencyInjection;
+using PGDemo.DependencyInjection.IocFlag;
 using PGDemo.Infrastructure.Helper;
 using System.Linq;
 

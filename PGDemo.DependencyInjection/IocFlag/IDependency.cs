@@ -1,4 +1,4 @@
-﻿namespace PGDemo.DependencyInjection
+﻿namespace PGDemo.DependencyInjection.IocFlag
 {
     /// <summary>
     /// 自动注入标识,默认是scope

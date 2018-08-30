@@ -1,5 +1,5 @@
 ﻿using PGDemo.DBModel;
-using PGDemo.DependencyInjection;
+using PGDemo.DependencyInjection.IocFlag;
 
 namespace PGDemo.Repository
 {
