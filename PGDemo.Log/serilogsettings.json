@@ -1,0 +1,23 @@
+{
+  "Serilog": {
+    "MinimumLevel": "Debug",
+    "WriteTo": [
+      {
+        "Name": "RollingFile",
+        "Args": {
+          "pathFormat": "C:/Logs/PGDemo-Trace-{Date}.log",
+          "restrictedToMinimumLevel": "Debug",
+          "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}"
+        }
+      },
+      {
+        "Name": "RollingFile",
+        "Args": {
+          "pathFormat": "C:/Logs/PGDemo-Error-{Date}.log",
+          "restrictedToMinimumLevel": "Warning",
+          "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] [{SourceContext}] [{EventId}] {Message}{NewLine}{Exception}"
+        }
+      }
+    ]
+  }
+}
